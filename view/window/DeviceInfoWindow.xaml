@@ -1,0 +1,43 @@
+﻿<Window x:Class="WindowsHardwareFinder.view.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WindowsHardwareFinder.view" xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:commands="clr-namespace:WindowsHardwareFinder.modelView.commands"
+        mc:Ignorable="d"
+        Title="MainWindow" WindowState="Maximized">
+
+
+    <Window.Resources>
+        <commands:ChangeHardwareObject x:Key="ChangeHardwareObjectCommand"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+        <ScrollViewer  Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <ItemsControl Name="viewList">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button 
+                                Content="{Binding Item}" 
+                                Command="{StaticResource ChangeHardwareObjectCommand}"
+                                CommandParameter="{Binding Item}" 
+                                FontSize="30"
+                                />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="20*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" x:Name="tbLastUpdated" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="30"/>
+            <TextBlock Grid.Row="1" x:Name="tbDeviceInfo" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="30"/>
+        </Grid>
+    </Grid>
+</Window>
