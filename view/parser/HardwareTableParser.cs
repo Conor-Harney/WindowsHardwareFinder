@@ -22,6 +22,7 @@ namespace WindowsHardwareFinder.view.parser
             }
             return data;
         }
+        
         public static HardwareObjectData ParseHardwareObject(HardwareObject hardwareObject) 
         {
             HardwareObjectData hardwareObjectData = new HardwareObjectData(hardwareObject);
@@ -38,7 +39,7 @@ namespace WindowsHardwareFinder.view.parser
         {
             string fieldToFind = "Description";
             ComputerSystemHardwareClassData computerSystemHardwareClassData = new ComputerSystemHardwareClassData(computerSystemHardwareClass);
-            if (HardwareTableInfoUtil.tableHasProperty(rows, computerSystemHardwareClass, fieldToFind))
+            if (HardwareTableInfoUtil.TableHasProperty( computerSystemHardwareClass, fieldToFind))
             {
                 foreach (ManagementObject row in rows)
                 {

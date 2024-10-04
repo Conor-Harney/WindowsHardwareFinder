@@ -50,7 +50,7 @@ namespace WindowsHardwareFinder.viewmodel.viewManager
 
         public static IEnumerable<LeafMenuItem> GetActivatedTablesMenu()
         {
-            return HardwareTableInfoUtil.GetActivatedTables().Select(view => new LeafMenuItem(view.ToString()));
+            return HardwareTableInfoUtil.GetAvailibleHardwareObjects().Select(view => new LeafMenuItem(view.ToString()));
         }
     }
 }

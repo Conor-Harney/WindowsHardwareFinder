@@ -14,6 +14,5 @@ namespace WindowsHardwareFinder.modelView.repo
             ManagementObjectCollection rows = searcher.Get();
             return rows;
         }
-
     }
 }

@@ -9,9 +9,9 @@
         Title="MainWindow" WindowState="Maximized">
 
 
-        <Window.Resources>
-            <commands:ChangeHardwareObject x:Key="ChangeHardwareObjectCommand"/>
-        </Window.Resources>
+    <Window.Resources>
+        <commands:ChangeHardwareObject x:Key="ChangeHardwareObjectCommand"/>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
