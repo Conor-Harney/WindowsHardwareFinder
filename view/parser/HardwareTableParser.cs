@@ -1,61 +1,68 @@
 ﻿using System.Management;
 using WindowsHardwareFinder.model.repo;
-using WindowsHardwareFinder.model.user;
+using WindowsHardwareFinder.model.view;
 using WindowsHardwareFinder.modelView.repo;
-using WindowsHardwareFinder.viewmodel.util;
+using WindowsHardwareFinder.viewmodel.service.repo;
+using WindowsHardwareFinder.viewmodel.service.view;
 
 namespace WindowsHardwareFinder.view.parser
 {
     internal static class HardwareTableParser
     {
-        public static string UserFriendlyTable(HardwareObject hardwareObject)
+        public static string UserFriendlyTable(HardwareObjectEnum hardwareObjectName)
         {
-            HardwareObjectData hardwareObjectData = ParseHardwareObject(hardwareObject);
-            String data = hardwareObjectData.Name + ":\r\n";
-            foreach (ComputerSystemHardwareClassData classData in hardwareObjectData.ComputerSystemHardwareClasses)
+            HardwareObjectData hardwareObjectData = ParseHardwareObject(hardwareObjectName);
+            string data = hardwareObjectName.ToString() + ":\r\n";
+            foreach (KeyValuePair<ComputerSystemHardwareClassEnum, List<ComputerSystemHardwareData>> hardwareObjectDataPair in hardwareObjectData.GetComputerSystemHardwareClassData())
             {
-                data += "\t" + classData.Name + ":\r\n";
-                foreach (string description in classData.Descriptions)
+                data += "\t" + hardwareObjectDataPair.Key.ToString() + ":\r\n";
+                List<ComputerSystemHardwareData> tableData = hardwareObjectDataPair.Value;
+                foreach (ComputerSystemHardwareData rowData in tableData)
                 {
-                    data += "\t\t" + description + "\r\n";
+                    foreach (KeyValuePair<string, string> field in rowData.GetFields())
+                    {
+                        data += "\t\t" + field.Key + ": " + field.Value + "\r\n";
+                    }
+                    data += "\r\n";
                 }
+                data += "\r\n";
             }
             return data;
         }
         
-        public static HardwareObjectData ParseHardwareObject(HardwareObject hardwareObject) 
+        public static HardwareObjectData ParseHardwareObject(HardwareObjectEnum hardwareObject) 
         {
-            HardwareObjectData hardwareObjectData = new HardwareObjectData(hardwareObject);
-            foreach (ComputerSystemHardwareClass table in HardwareTableInfoUtil.GetTablesForObject(hardwareObject))
+            HardwareObjectData hardwareObjectData = new(hardwareObject);
+            foreach (ComputerSystemHardwareClassEnum table in HardwareObjectService.GetTablesForObject(hardwareObject))
             {
                 ManagementObjectCollection rows = HardwareObjectRepo.queryAll(table);
-                ComputerSystemHardwareClassData computerSystemHardwareClassData = ParseRows(rows, table);
-                hardwareObjectData.ComputerSystemHardwareClasses.Add(computerSystemHardwareClassData);
+                List<ComputerSystemHardwareData> rowsClasses = ParseRows(rows, table);
+                hardwareObjectData.AddTableData(table, rowsClasses);
             }
             return hardwareObjectData;
         }
 
-        private static ComputerSystemHardwareClassData ParseRows(ManagementObjectCollection rows, ComputerSystemHardwareClass computerSystemHardwareClass)
+        // Returns all display fields data for the rows provided
+        private static List<ComputerSystemHardwareData> ParseRows(ManagementObjectCollection rows, ComputerSystemHardwareClassEnum tableName)
         {
-            string fieldToFind = "Description";
-            ComputerSystemHardwareClassData computerSystemHardwareClassData = new ComputerSystemHardwareClassData(computerSystemHardwareClass);
-            if (HardwareTableInfoUtil.TableHasProperty( computerSystemHardwareClass, fieldToFind))
+            List<ComputerSystemHardwareData> rowsClasses = new();
+            foreach (ManagementObject row in rows)
             {
-                foreach (ManagementObject row in rows)
+                Dictionary<string, string> rowDisplayFieldData = new();
+                foreach (string field in ComputerSystemHardwareClassService.GetDisplayFields(tableName))
                 {
-
                     try
                     {
-                        var description = row[fieldToFind];
-                        computerSystemHardwareClassData.Descriptions.Add((string)description);
+                        rowDisplayFieldData.Add(field, (string)row[field]);
                     }
                     catch
                     {
                         continue;
                     }
                 }
+                rowsClasses.Add(new ComputerSystemHardwareData(rowDisplayFieldData));
             }
-            return computerSystemHardwareClassData;
+            return rowsClasses;
         }
     }
 }

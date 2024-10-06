@@ -36,8 +36,10 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="20*"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" x:Name="tbLastUpdated" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="30"/>
-            <TextBlock Grid.Row="1" x:Name="tbDeviceInfo" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="30"/>
+            <TextBlock Grid.Row="0" x:Name="tbLastUpdated" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30"/>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <TextBlock x:Name="tbDeviceInfo" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="30"/>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Window>
