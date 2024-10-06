@@ -1,9 +1,8 @@
 ﻿using System.Reactive.Linq;
-using WindowsHardwareFinder.model.repo;
-using WindowsHardwareFinder.model.user;
+using WindowsHardwareFinder.model.view;
 using WindowsHardwareFinder.view;
 using WindowsHardwareFinder.view.parser;
-using WindowsHardwareFinder.viewmodel.util;
+using WindowsHardwareFinder.viewmodel.service.view;
 using static WindowsHardwareFinder.model.menu.LeafMenu;
 
 namespace WindowsHardwareFinder.viewmodel.viewManager
@@ -12,7 +11,7 @@ namespace WindowsHardwareFinder.viewmodel.viewManager
     {
         public static MainWindow? CurrentWindow { get; set; }
 
-        public static HardwareObject CurrentHardwareObject { get; set; }
+        public static HardwareObjectEnum CurrentHardwareObject { get; set; }
 
         private static IObservable<long> OneSecondEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
         private static IObservable<long> TenSecondEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
@@ -43,14 +42,14 @@ namespace WindowsHardwareFinder.viewmodel.viewManager
         public static void UpdateWindow()
         {
             string data = "";
-            HardwareObjectData hardwareObjectData = HardwareTableParser.ParseHardwareObject(CurrentHardwareObject);
+            //HardwareObjectData hardwareObjectData = HardwareTableParser.ParseHardwareObject(CurrentHardwareObject);
             data += HardwareTableParser.UserFriendlyTable(CurrentHardwareObject);
             HardwareData = data;
         }
 
         public static IEnumerable<LeafMenuItem> GetActivatedTablesMenu()
         {
-            return HardwareTableInfoUtil.GetAvailibleHardwareObjects().Select(view => new LeafMenuItem(view.ToString()));
+            return HardwareObjectService.GetAvailibleHardwareObjects().Select(view => new LeafMenuItem(view.ToString()));
         }
     }
 }
