@@ -13,14 +13,15 @@ namespace WindowsHardwareFinder.viewmodel.viewManager
 
         public static HardwareObjectEnum CurrentHardwareObject { get; set; }
 
-        private static IObservable<long> OneSecondEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
-        private static IObservable<long> TenSecondEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
+        private static IObservable<long> oneSecondEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
+        private static IObservable<long> tenSecondEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
+        private static IObservable<long> oneMinuteEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromMinutes(1));
         private static string HardwareData = "";
         internal static void ScheduleWindowUpdate()
         {
             if (null != CurrentWindow)
             {
-                OneSecondEvents.Subscribe(e =>
+                oneSecondEvents.Subscribe(e =>
                 {
                     CurrentWindow.Dispatcher.Invoke(() =>
                     {
@@ -29,7 +30,7 @@ namespace WindowsHardwareFinder.viewmodel.viewManager
                     });
                 });
 
-                TenSecondEvents.Subscribe(e =>
+                oneMinuteEvents.Subscribe(e =>
                 {
                     CurrentWindow.Dispatcher.Invoke(() =>
                     {
@@ -42,7 +43,6 @@ namespace WindowsHardwareFinder.viewmodel.viewManager
         public static void UpdateWindow()
         {
             string data = "";
-            //HardwareObjectData hardwareObjectData = HardwareTableParser.ParseHardwareObject(CurrentHardwareObject);
             data += HardwareTableParser.UserFriendlyTable(CurrentHardwareObject);
             HardwareData = data;
         }

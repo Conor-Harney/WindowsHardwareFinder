@@ -46,21 +46,28 @@ namespace WindowsHardwareFinder.view.parser
         private static List<ComputerSystemHardwareData> ParseRows(ManagementObjectCollection rows, ComputerSystemHardwareClassEnum tableName)
         {
             List<ComputerSystemHardwareData> rowsClasses = new();
-            foreach (ManagementObject row in rows)
+            try
             {
-                Dictionary<string, string> rowDisplayFieldData = new();
-                foreach (string field in ComputerSystemHardwareClassService.GetDisplayFields(tableName))
+                foreach (ManagementObject row in rows)
                 {
-                    try
+                    Dictionary<string, string> rowDisplayFieldData = new();
+                    foreach (string field in ComputerSystemHardwareClassService.GetDisplayFields(tableName))
                     {
-                        rowDisplayFieldData.Add(field, (string)row[field]);
+                        try
+                        {
+                            rowDisplayFieldData.Add(field, (string)row[field]);
+                        }
+                        catch
+                        {
+                            continue;
+                        }
                     }
-                    catch
-                    {
-                        continue;
-                    }
+                    rowsClasses.Add(new ComputerSystemHardwareData(rowDisplayFieldData));
                 }
-                rowsClasses.Add(new ComputerSystemHardwareData(rowDisplayFieldData));
+            }
+            catch (System.Management.ManagementException)
+            {
+                // Handle Version depend class object exceptions (invalid class exception for Win32_FloppyDrive)
             }
             return rowsClasses;
         }
