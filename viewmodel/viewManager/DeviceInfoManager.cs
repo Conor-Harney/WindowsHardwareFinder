@@ -1,4 +1,5 @@
 ﻿using System.Reactive.Linq;
+using WindowsHardwareFinder.model.repo;
 using WindowsHardwareFinder.model.view;
 using WindowsHardwareFinder.view;
 using WindowsHardwareFinder.view.parser;
@@ -16,16 +17,16 @@ namespace WindowsHardwareFinder.viewmodel.viewManager
         private static IObservable<long> oneSecondEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
         private static IObservable<long> tenSecondEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
         private static IObservable<long> oneMinuteEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromMinutes(1));
-        private static string HardwareData = "";
+        private static Dictionary<ComputerSystemHardwareClassEnum, Dictionary<string, Dictionary<string, string>>> HardwareData = new();
         internal static void ScheduleWindowUpdate()
         {
             if (null != CurrentWindow)
             {
-                oneSecondEvents.Subscribe(e =>
+                oneSecondEvents.Subscribe(static e =>
                 {
                     CurrentWindow.Dispatcher.Invoke(() =>
                     {
-                        CurrentWindow.tbDeviceInfo.Text = HardwareData;
+                        CurrentWindow.tableDataCollection.ItemsSource = HardwareData;
                         CurrentWindow.tbLastUpdated.Text = DateTimeOffset.Now.ToString();
                     });
                 });
@@ -42,9 +43,7 @@ namespace WindowsHardwareFinder.viewmodel.viewManager
 
         public static void UpdateWindow()
         {
-            string data = "";
-            data += HardwareTableParser.UserFriendlyTable(CurrentHardwareObject);
-            HardwareData = data;
+            HardwareData = HardwareTableParser.MapData(CurrentHardwareObject);
         }
 
         public static IEnumerable<LeafMenuItem> GetActivatedTablesMenu()
