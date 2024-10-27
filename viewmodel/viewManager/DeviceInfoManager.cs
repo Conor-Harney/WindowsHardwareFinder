@@ -1,4 +1,5 @@
 ﻿using System.Reactive.Linq;
+using WindowsHardwareFinder.model.repo;
 using WindowsHardwareFinder.model.view;
 using WindowsHardwareFinder.view;
 using WindowsHardwareFinder.view.parser;
@@ -13,23 +14,24 @@ namespace WindowsHardwareFinder.viewmodel.viewManager
 
         public static HardwareObjectEnum CurrentHardwareObject { get; set; }
 
-        private static IObservable<long> OneSecondEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
-        private static IObservable<long> TenSecondEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
-        private static string HardwareData = "";
+        private static IObservable<long> oneSecondEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
+        private static IObservable<long> tenSecondEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(10));
+        private static IObservable<long> oneMinuteEvents = Observable.Timer(DateTimeOffset.Now, TimeSpan.FromMinutes(1));
+        private static Dictionary<ComputerSystemHardwareClassEnum, Dictionary<string, Dictionary<string, string>>> HardwareData = new();
         internal static void ScheduleWindowUpdate()
         {
             if (null != CurrentWindow)
             {
-                OneSecondEvents.Subscribe(e =>
+                oneSecondEvents.Subscribe(static e =>
                 {
                     CurrentWindow.Dispatcher.Invoke(() =>
                     {
-                        CurrentWindow.tbDeviceInfo.Text = HardwareData;
+                        CurrentWindow.tableDataCollection.ItemsSource = HardwareData;
                         CurrentWindow.tbLastUpdated.Text = DateTimeOffset.Now.ToString();
                     });
                 });
 
-                TenSecondEvents.Subscribe(e =>
+                oneMinuteEvents.Subscribe(e =>
                 {
                     CurrentWindow.Dispatcher.Invoke(() =>
                     {
@@ -41,10 +43,7 @@ namespace WindowsHardwareFinder.viewmodel.viewManager
 
         public static void UpdateWindow()
         {
-            string data = "";
-            //HardwareObjectData hardwareObjectData = HardwareTableParser.ParseHardwareObject(CurrentHardwareObject);
-            data += HardwareTableParser.UserFriendlyTable(CurrentHardwareObject);
-            HardwareData = data;
+            HardwareData = HardwareTableParser.MapData(CurrentHardwareObject);
         }
 
         public static IEnumerable<LeafMenuItem> GetActivatedTablesMenu()
