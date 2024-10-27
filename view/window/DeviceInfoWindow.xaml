@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WindowsHardwareFinder.view" xmlns:system="clr-namespace:System;assembly=mscorlib"
-        xmlns:commands="clr-namespace:WindowsHardwareFinder.modelView.commands"
+        xmlns:commands="clr-namespace:WindowsHardwareFinder.viewmodel.commands"
         mc:Ignorable="d"
         Title="MainWindow" WindowState="Maximized">
 
@@ -15,7 +15,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <ScrollViewer  Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <ItemsControl Name="viewList">
@@ -38,7 +38,43 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" x:Name="tbLastUpdated" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30"/>
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                <TextBlock x:Name="tbDeviceInfo" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="30"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <ItemsControl Name="tableDataCollection" Grid.Column="0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Expander Name="tableName" Header="{Binding Key}" FontSize="30" FontWeight="Bold">
+                                    <ItemsControl ItemsSource="{Binding Value}" Grid.Column="1">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Expander Name="tableItemName" Header="{Binding Key}" FontSize="25" FontWeight="Regular">
+                                                    <ItemsControl ItemsSource="{Binding Value}" >
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Grid Grid.Column="2">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="1*"/>
+                                                                        <ColumnDefinition Width="1*"/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <TextBlock Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="20" Text="{Binding Key}"/>
+                                                                    <TextBlock Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="20" Text="{Binding Value}"/>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </Expander>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Expander>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
             </ScrollViewer>
         </Grid>
     </Grid>

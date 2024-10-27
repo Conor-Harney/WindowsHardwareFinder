@@ -2,7 +2,7 @@
 using WindowsHardwareFinder.model.view;
 using WindowsHardwareFinder.viewmodel.viewManager;
 
-namespace WindowsHardwareFinder.modelView.commands
+namespace WindowsHardwareFinder.viewmodel.commands
 {
     internal class ChangeHardwareObject : ICommand
     {
@@ -10,7 +10,7 @@ namespace WindowsHardwareFinder.modelView.commands
 
         public bool CanExecute(object? parameter)
         {
-            return Enum.TryParse((string?)parameter, out HardwareObjectEnum hardwareObject);
+            return Enum.TryParse((string?)parameter, out HardwareObjectEnum _);
         }
 
         public void Execute(object? parameter)
