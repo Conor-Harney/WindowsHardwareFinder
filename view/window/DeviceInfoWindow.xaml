@@ -12,56 +12,59 @@
     <Window.Resources>
         <commands:ChangeHardwareObject x:Key="ChangeHardwareObjectCommand"/>
     </Window.Resources>
+
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="3*"/>
-        </Grid.ColumnDefinitions>
-        <ScrollViewer  Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <ItemsControl Name="viewList">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="20*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" x:Name="tbLastUpdated" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30"/>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <ScrollViewer  Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <ItemsControl Name="viewList">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button 
                                 Content="{Binding Item}" 
                                 Command="{StaticResource ChangeHardwareObjectCommand}"
                                 CommandParameter="{Binding Item}" 
                                 FontSize="30"
                                 />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-        
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="20*"/>
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" x:Name="tbLastUpdated" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30"/>
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
 
                 <TabControl TabStripPlacement="Top" Name="tableDataCollection">
-                    
+
                     <TabControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Key}"/>
                         </DataTemplate>
                     </TabControl.ItemTemplate>
-                    
+
                     <TabControl.ContentTemplate>
                         <DataTemplate>
 
                             <ItemsControl ItemsSource="{Binding Value}" Grid.Column="1">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        
+
                                         <Expander Name="tableItemName" Header="{Binding Key}" FontSize="25" FontWeight="Regular">
                                             <Expander.Content>
-                                               
+
                                                 <ItemsControl ItemsSource="{Binding Value}" >
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            
+
                                                             <Grid Grid.Column="2">
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="1*"/>
@@ -70,14 +73,14 @@
                                                                 <TextBlock Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="20" Text="{Binding Key}"/>
                                                                 <TextBlock Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="20" Text="{Binding Value}"/>
                                                             </Grid>
-                                                            
+
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
-                                                
+
                                             </Expander.Content>
                                         </Expander>
-                                        
+
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
